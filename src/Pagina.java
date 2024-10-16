@@ -3,27 +3,27 @@ public class Pagina {
     int marco;
     boolean bitR;
     boolean bitM;
-    int contadorEnvejecimiento;
+    int contador;
 
     public Pagina(int numeroPagina) {
         this.numeroPagina = numeroPagina;
         this.marco = -1; 
         this.bitR = false;
         this.bitM = false;
-        this.contadorEnvejecimiento = 0;
+        this.contador = 0;
     }
 
-    public void referenciar(boolean esEscritura) {
+    public void actualizar(boolean escritura) {
         this.bitR = true; 
-        if (esEscritura) {
+        if (escritura) {
             this.bitM = true;
         }
     }
 
     public void envejecer() {
-        this.contadorEnvejecimiento >>= 1;
+        this.contador >>= 1;
         if (this.bitR) {
-            this.contadorEnvejecimiento |= 0x80;
+            this.contador |= 0x80;
             this.bitR = false;
         }
     }
