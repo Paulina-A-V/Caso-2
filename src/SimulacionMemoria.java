@@ -8,15 +8,11 @@ public class SimulacionMemoria {
     private int w = 0;                  // Contador de escrituras (W)
     private List<String> referencias;   // Lista de referencias de páginas
     private int numMarcosPagina;        // Número de marcos de página
-    private int tamanioPagina;          // Tamaño de página en bytes (puede ajustarse según sea necesario)
-    private int numFilas;               // Número de filas de la imagen
-    private int numColumnas;            // Número de columnas de la imagen
-    private int numReferencias;         // Número de referencias generadas
-    private int numPaginas;             // Número de páginas virtuales
     private int referenciaActual = 0;   // Índice de la referencia actual
     private boolean fin = false;        // Indicador de finalización de la simulación
-    private MemoriaVirtual memoria;            // Objeto de que representa la memoria
+    private MemoriaVirtual memoria;     // Objeto de que representa la memoria
     private long tiempoEjecucion;
+    private String archivoReferencias;  // Archivo de referencias de páginas
 
     // Clase interna para representar un marco de página
 
@@ -24,33 +20,48 @@ public class SimulacionMemoria {
     public SimulacionMemoria(int numMarcosPagina, String archivoReferencias) throws IOException {
         this.numMarcosPagina = numMarcosPagina;
         this.memoria = new MemoriaVirtual(this.numMarcosPagina);
-        leerReferencias(archivoReferencias);
         simular();
         imprimirResultados();
     }
 
-    public void simular() {
+    public void simular() throws IOException {
         long startTime = System.nanoTime();
         Thread proceso = new Thread(new Runnable() {
-            public void run() {        
-                for (String ref : referencias) {
-                    referenciaActual++;
-                    if (ref.contains("R")) r++;
-                    if (ref.contains("W")) w++;
-                    Pagina pagina = crearPagina(ref);
-                    boolean hit = memoria.cargarPagina(pagina);
+            public void run() {
+                try (BufferedReader reader = new BufferedReader(new FileReader(archivoReferencias))) {
+                    String linea;
+                    int lineNumber = 0;
 
-                    if (hit) hits++;
-                    else {
-                        misses++;
+                    while ((linea = reader.readLine()) != null) {
+
+                    lineNumber++;
+
+                    if (lineNumber >= 6) {
+                        referenciaActual++;
+
+                        if (linea.contains("R")) r++;
+                        if (linea.contains("W")) w++;
+
+                        Pagina pagina = crearPagina(linea);
+                        boolean hit = memoria.cargarPagina(pagina);
+                        referencias.add(linea);
+                        
+                        if (hit) hits++;
+                        else {
+                            misses++;
+                        }
+                        try{
+                            Thread.sleep(1);
+                        } catch (InterruptedException e){
+                            e.printStackTrace();
+                        }
+                        fin = true;
+
                     }
-                    try{
-                        Thread.sleep(1);
-                    } catch (InterruptedException e){
-                        e.printStackTrace();
-                    }
-                } 
-                fin = true;
+                }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
         );
@@ -99,13 +110,18 @@ public class SimulacionMemoria {
                 referencias.add(linea);
             } else {
                 // Leer configuraciones iniciales
-                if (lineNumber == 1) this.tamanioPagina = Integer.parseInt(linea.split(",")[1]);  // Tamaño de página
-                if (lineNumber == 2) this.numFilas = Integer.parseInt(linea.split(",")[1]);       // Número de filas
-                if (lineNumber == 3) this.numColumnas = Integer.parseInt(linea.split(",")[1]);    // Número de columnas
-                if (lineNumber == 4) this.numReferencias = Integer.parseInt(linea.split(",")[1]); // Número de referencias
-                if (lineNumber == 5) this.numPaginas = Integer.parseInt(linea.split(",")[1]);     // Número de páginas
+                if (lineNumber == 1)
+                 Integer.parseInt(linea.split(",")[1]);
+                if (lineNumber == 2)
+                 Integer.parseInt(linea.split(",")[1]);
+                if (lineNumber == 3)
+                 Integer.parseInt(linea.split(",")[1]);
+                if (lineNumber == 4)
+                 Integer.parseInt(linea.split(",")[1]);
+                if (lineNumber == 5)
+                 Integer.parseInt(linea.split(",")[1]);
             }
-}
+        }
         }
 
     }
@@ -137,6 +153,4 @@ public class SimulacionMemoria {
         System.out.println("Tiempo total de ejecución: " + tiempoEjecucion + " ns");
     }
 
-    public void mostrarResultados() {
-    }
 }

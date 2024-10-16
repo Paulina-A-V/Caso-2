@@ -249,7 +249,6 @@ public class App {
 
             SimulacionMemoria simulador = new SimulacionMemoria(marcosTotales, archivoReferencias);
             simulador.simular();
-            simulador.mostrarResultados();
         } catch (Exception e) {
             e.printStackTrace();
         }
