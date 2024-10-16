@@ -9,69 +9,82 @@ public class App {
     public static void main(String[] args) {
         InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
-
+        System.out.println("Seleccione una opción: ");
+        System.out.println("1. Generar referencias de páginas desde imagen BMP");
+        System.out.println("2. Calcular fallas de página, hits y tiempos desde archivo de referencias");
+        isr = new InputStreamReader(System.in);
+        br = new BufferedReader(isr);
         try {
-            // Lectura de imagen y escondido del mensaje
-            System.out.println("Nombre del archivo con la imagen a procesar: ");
-            String ruta = br.readLine();
-            Imagen imagen = new Imagen(ruta);
+            int opcion = Integer.parseInt(br.readLine());
+            switch (opcion) {
+                case 1:
+                    System.out.println("Nombre del archivo con la imagen a procesar: ");
+                    String ruta = br.readLine();
+                    Imagen imagen = new Imagen(ruta);
+    
+                    System.out.println("Nombre del archivo con el mensaje a esconder: ");
+                    String rutaMensaje = br.readLine();
+    
+                    // Leer el mensaje desde un archivo de texto
+                    // int longitud = leerArchivoTexto(rutaMensaje);
+                    // char[] mensaje = new char[longitud];
+                    char[] mensaje = leerArchivoTexto(rutaMensaje);
+                    int longitud = mensaje.length;
+                
+                    imagen.esconder(mensaje, longitud);
+                
+                    // Escribir la imagen con el mensaje escondido
+                    imagen.escribirImagen(ruta.replace(".bmp", "") + "_mod.bmp");
+                
+                    System.out.println(
+                            "El mensaje ha sido escondido exitosamente en la imagen: " + ruta.replace(".bmp", "") + "_mod.bmp");
+                
+                    // Recuperación del mensaje escondido
+                    System.out.println("Nombre del archivo con el mensaje escondido: ");
+                    ruta = br.readLine();
+                    imagen = new Imagen(ruta);
+                
+                    System.out.println("Nombre del archivo para almacenar el mensaje recuperado: ");
+                    String rutaSalida = br.readLine();
+                
+                    // Leer la longitud del mensaje escondido
+                    longitud = imagen.leerLongitud();
+                    System.out.println("esta es la longitud: " + longitud);
+                    mensaje = new char[longitud];
+                
+                    // Recuperar el mensaje
+                    imagen.recuperar(mensaje, longitud);
+                
+                    // Escribir el mensaje recuperado en un archivo
+                    escribirArchivoTexto(rutaSalida, mensaje);
+                
+                    // escribir las referencias
+                    System.out.println("Tamano de página: ");
+                    Integer tamanoPagina = Integer.parseInt(br.readLine());
+                
+                    List<String> listaMat = listaMatriz(imagen, "imagen.txt", tamanoPagina, rutaMensaje);
+                    int total = imagen.alto * imagen.ancho * 3;
+                    List<String> listaMen = listaMensaje(tamanoPagina, mensaje, total);
+                
+                    System.out.println("El mensaje ha sido recuperado y almacenado en: " + rutaSalida);
+                    br.close();
+                
+                    int P = tamanoPagina;
+                    int NF = imagen.alto;
+                    int NC = imagen.ancho;
+                    int NR = 17 * longitud + 16;
+                    // arrelar NP sale -1
+                    int NP = ((NF * NC * 3) / P) + (longitud / tamanoPagina) + 1;
+                
+                    referencias(listaMat, listaMen, P, NF, NC, NR, NP);
 
-            System.out.println("Nombre del archivo con el mensaje a esconder: ");
-            String rutaMensaje = br.readLine();
-
-            // Leer el mensaje desde un archivo de texto
-            // int longitud = leerArchivoTexto(rutaMensaje);
-            // char[] mensaje = new char[longitud];
-            char[] mensaje = leerArchivoTexto(rutaMensaje);
-            int longitud = mensaje.length;
-
-            imagen.esconder(mensaje, longitud);
-
-            // Escribir la imagen con el mensaje escondido
-            imagen.escribirImagen(ruta.replace(".bmp", "") + "_mod.bmp");
-
-            System.out.println(
-                    "El mensaje ha sido escondido exitosamente en la imagen: " + ruta.replace(".bmp", "") + "_mod.bmp");
-
-            // Recuperación del mensaje escondido
-            System.out.println("Nombre del archivo con el mensaje escondido: ");
-            ruta = br.readLine();
-            imagen = new Imagen(ruta);
-
-            System.out.println("Nombre del archivo para almacenar el mensaje recuperado: ");
-            String rutaSalida = br.readLine();
-
-            // Leer la longitud del mensaje escondido
-            longitud = imagen.leerLongitud();
-            System.out.println("esta es la longitud: " + longitud);
-            mensaje = new char[longitud];
-
-            // Recuperar el mensaje
-            imagen.recuperar(mensaje, longitud);
-
-            // Escribir el mensaje recuperado en un archivo
-            escribirArchivoTexto(rutaSalida, mensaje);
-
-            // escribir las referencias
-            System.out.println("Tamaño de página: ");
-            Integer tamañoPagina = Integer.parseInt(br.readLine());
-
-            List<String> listaMat = listaMatriz(imagen, "imagen.txt", tamañoPagina, rutaMensaje);
-            int total = imagen.alto * imagen.ancho * 3;
-            List<String> listaMen = listaMensaje(tamañoPagina, mensaje, total);
-
-            System.out.println("El mensaje ha sido recuperado y almacenado en: " + rutaSalida);
-            br.close();
-
-            int P = tamañoPagina;
-            int NF = imagen.alto;
-            int NC = imagen.ancho;
-            int NR = 17 * longitud + 16;
-            // arrelar NP sale -1
-            int NP = ((NF * NC * 3) / P) + (longitud / tamañoPagina) + 1;
-
-            referencias(listaMat, listaMen, P, NF, NC, NR, NP);
-
+                    break;
+                case 2:
+                    calcularFallasYHits(new Scanner(System.in));
+                    break;
+                default:
+                    System.out.println("Opción no válida. Intente de nuevo.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -108,7 +121,7 @@ public class App {
 
     // lista Matriz
 
-    public static List<String> listaMatriz(Imagen img, String nombreArchivo, int tamañoPagina, String archivoMensaje) {
+    public static List<String> listaMatriz(Imagen img, String nombreArchivo, int tamanoPagina, String archivoMensaje) {
         List<String> referencias = new ArrayList<String>();
         try {
             FileWriter writer = new FileWriter(nombreArchivo);
@@ -123,7 +136,7 @@ public class App {
                     writer.write(strR + "\n");
                     referencias.add(strR);
                     desplazamiento++;
-                    if (desplazamiento >= tamañoPagina) {
+                    if (desplazamiento >= tamanoPagina) {
                         pagina++;
                         desplazamiento = 0;
                     }
@@ -132,7 +145,7 @@ public class App {
                     writer.write(strG + "\n");
                     referencias.add(strG);
                     desplazamiento++;
-                    if (desplazamiento >= tamañoPagina) {
+                    if (desplazamiento >= tamanoPagina) {
                         pagina++;
                         desplazamiento = 0;
                     }
@@ -141,7 +154,7 @@ public class App {
                     writer.write(strB + "\n");
                     referencias.add(strB);
                     desplazamiento++;
-                    if (desplazamiento >= tamañoPagina) {
+                    if (desplazamiento >= tamanoPagina) {
                         pagina++;
                         desplazamiento = 0;
                     }
@@ -157,16 +170,16 @@ public class App {
     }
 
     // listaMensaje
-    public static List<String> listaMensaje(int tamañoPagina, char[] mensaje, int tamañoMatriz) throws IOException {
+    public static List<String> listaMensaje(int tamanoPagina, char[] mensaje, int tamanoMatriz) throws IOException {
         {
 
             List<String> referencias = new ArrayList<String>();
             FileWriter writer = new FileWriter("mensaje.txt");
-            int inicio = tamañoMatriz / tamañoPagina;
+            int inicio = tamanoMatriz / tamanoPagina;
             int desplazamiento = 0;
 
             for (int i = 0; i < mensaje.length; i++) {
-                if (desplazamiento == tamañoPagina) {
+                if (desplazamiento == tamanoPagina) {
                     inicio++;
                     desplazamiento = 0;
                 }
@@ -219,4 +232,23 @@ public class App {
         }
         writer.close();
     }
+
+    private static void calcularFallasYHits(Scanner scanner) {
+        try {
+    
+            System.out.println("Ingrese el número de marcos de página: ");
+            int marcosTotales = scanner.nextInt();
+            scanner.nextLine(); // Limpiar buffer
+    
+    
+            System.out.println("Ingrese el nombre del archivo de referencias: ");
+            String archivoReferencias = scanner.nextLine();
+    
+            SimulacionMemoria simulador = new SimulacionMemoria(marcosTotales, archivoReferencias);
+            simulador.simular();
+            simulador.mostrarResultados();
+        }catch (Exception e) {
+            e.printStackTrace();
+            }
+    }  
 }

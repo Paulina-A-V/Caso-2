@@ -90,7 +90,7 @@ Mensaje[3],1152,3,W
 Mensaje[4],1152,4,W
 Imagen[0][16].R,0,48,R
 Mensaje[4],1152,4,W
-Imagen[0][16].G,0,49,R
+Imagen[0][16].G,0,49,R  
 Mensaje[4],1152,4,W
 Imagen[0][16].B,0,50,R
 Mensaje[4],1152,4,W

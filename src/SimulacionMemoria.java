@@ -19,9 +19,14 @@ public class SimulacionMemoria {
     // Clase interna para representar un marco de página
 
 
-    public SimulacionMemoria(int numMarcosPagina) {
+    public SimulacionMemoria(int numMarcosPagina, String archivoReferencias) throws IOException {
         this.numMarcosPagina = numMarcosPagina;
         this.marcosEnUso = new ArrayList<>(numMarcosPagina);
+        leerReferencias(archivoReferencias);
+    }
+
+    public void simular() {
+
     }
 
     // Método para leer las referencias desde el archivo generado
@@ -116,22 +121,6 @@ public class SimulacionMemoria {
         System.out.println("Número de escrituras (W): " + w);
     }
 
-    public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.print("Ingrese el número de marcos de página: ");
-        int numMarcosPagina = scanner.nextInt();
-        scanner.nextLine();  // Consumir la nueva línea
-
-        System.out.print("Ingrese el nombre del archivo de referencias: ");
-        String archivoReferencias = scanner.nextLine();
-
-        scanner.close();
-        SimulacionMemoria simulacion = new SimulacionMemoria(numMarcosPagina);
-        simulacion.leerReferencias(archivoReferencias);
-
-        //TODO Implementar threads
-
-        simulacion.imprimirResultados();
+    public void mostrarResultados() {
     }
 }
