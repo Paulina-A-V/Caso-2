@@ -19,6 +19,7 @@ public class SimulacionMemoria {
     public SimulacionMemoria(int numMarcosPagina, String archivoReferencias) throws IOException {
         this.numMarcosPagina = numMarcosPagina;
         this.memoria = new MemoriaVirtual(this.numMarcosPagina);
+        this.archivoReferencias = archivoReferencias;
         this.referencias = new ArrayList<>();
         simular();
         imprimirResultados();
@@ -28,7 +29,8 @@ public class SimulacionMemoria {
         long startTime = System.nanoTime();
         Thread proceso = new Thread(new Runnable() {
             public void run() {
-                try (BufferedReader reader = new BufferedReader(new FileReader(archivoReferencias))) {
+                try (
+                    BufferedReader reader = new BufferedReader(new FileReader(archivoReferencias))) {
                     String linea;
                     int lineNumber = 0;
 
@@ -56,7 +58,7 @@ public class SimulacionMemoria {
                         fin = true;
 
                     }
-                }
+                 }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
