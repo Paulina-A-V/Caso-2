@@ -8,7 +8,6 @@ public class SimulacionMemoria {
     private int w = 0;                  // Contador de escrituras (W)
     private List<String> referencias;   // Lista de referencias de páginas
     private int numMarcosPagina;        // Número de marcos de página
-    private int referenciaActual = 0;   // Índice de la referencia actual
     private boolean fin = false;        // Indicador de finalización de la simulación
     private MemoriaVirtual memoria;     // Objeto de que representa la memoria
     private long tiempoEjecucion;
@@ -20,6 +19,7 @@ public class SimulacionMemoria {
     public SimulacionMemoria(int numMarcosPagina, String archivoReferencias) throws IOException {
         this.numMarcosPagina = numMarcosPagina;
         this.memoria = new MemoriaVirtual(this.numMarcosPagina);
+        this.referencias = new ArrayList<>();
         simular();
         imprimirResultados();
     }
@@ -37,8 +37,6 @@ public class SimulacionMemoria {
                     lineNumber++;
 
                     if (lineNumber >= 6) {
-                        referenciaActual++;
-
                         if (linea.contains("R")) r++;
                         if (linea.contains("W")) w++;
 
