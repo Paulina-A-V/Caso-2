@@ -1,18 +1,33 @@
-## Getting Started
+## Opción 1
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Por organización los archivos se están guardando en la carpeta data, por lo que si se van a hacer pruebas se deben poner todos los archivos necesarios en dicha carpeta. Dentro del propio código ya se integró la ruta, por lo que cuando se piden los nombres de archivos se deben ingresar con el formato nombre.txt/nombre.bmp
 
-## Folder Structure
+Un ejemplo de uso de la consola del programa en la opcion 1:
 
-The workspace contains two folders by default, where:
+Nombre del archivo con la imagen a procesar:
+prueba.bmp
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+Nombre del archivo con el mensaje a esconder:
+100.txt
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+Nombre del archivo con el mensaje escondido: 
+prueba_mod.bmp
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+Tamano de página: 
+512
 
-## Dependency Management
+Nombre de archivo para guardar las referencias: 
+referencias.txt
+(ojo: si se usa el nombre de un archivo que ya existe este se va a sobreescribir)
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+En caso de que se quiera verificar el mensaje recuperado este se almacena en out.txt
+
+## Opcion 2
+
+Ya sabiendo que el archivo de referencias quedó alojado en la carpeta data en caso de querer verificarlo manualmente, este es un ejemplo del funcionamiento en consola de esta opcion:
+
+Ingrese el número de marcos de página: 
+4
+
+Ingrese el nombre del archivo de referencias: 
+referencias.txt
