@@ -7,11 +7,14 @@ import java.util.ArrayList;
 public class App {
 
     public static void main(String[] args) {
-        InputStreamReader isr = new InputStreamReader(System.in);
+        boolean continuar = true;
+        while (continuar) {
+            InputStreamReader isr = new InputStreamReader(System.in);
         BufferedReader br = new BufferedReader(isr);
         System.out.println("Seleccione una opción: ");
         System.out.println("1. Generar referencias de páginas desde imagen BMP");
         System.out.println("2. Calcular fallas de página, hits y tiempos desde archivo de referencias");
+        System.out.println("3. Salir");
         isr = new InputStreamReader(System.in);
         br = new BufferedReader(isr);
         try {
@@ -85,12 +88,17 @@ public class App {
                 case 2:
                     calcularFallasYHits(new Scanner(System.in));
                     break;
+                case 3:
+                    continuar = false;
+                    break;
                 default:
                     System.out.println("Opción no válida. Intente de nuevo.");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        }
+        
     }
 
     // Método para leer el contenido de un archivo de texto y devolverlo como un
